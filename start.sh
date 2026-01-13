@@ -66,7 +66,7 @@ if [ ! -f ".hytale-downloader-credentials.json" ]; then
     echo "Credentials file not found, running initial setup..."
     echo "Starting Hytale downloader..."
     $DOWNLOADER -check-update
-    $DOWNLOADER -download-path server.zip
+    $DOWNLOADER -patchline $PATCHLINE -download-path server.zip
     extract_server_files
 fi
 
@@ -74,7 +74,7 @@ fi
 if [ "${AUTOMATIC_UPDATE}" = "1" ]; then
     echo "Starting Hytale downloader..."
     $DOWNLOADER -check-update
-    $DOWNLOADER -download-path server.zip
+    $DOWNLOADER -patchline $PATCHLINE -download-path server.zip
     extract_server_files
 fi
 

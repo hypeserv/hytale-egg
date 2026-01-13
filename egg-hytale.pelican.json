@@ -4,7 +4,7 @@
         "version": "PLCN_v3",
         "update_url": "https://cdn.nat.gg/egg/egg-hytale.pelican.json"
     },
-    "exported_at": "2026-01-13T15:04:52+00:00",
+    "exported_at": "2026-01-13T15:09:14+00:00",
     "name": "Hytale",
     "author": "contact@natroutter.fi",
     "uuid": "6594b287-2d7b-4249-bc93-4d40283c57e3",
@@ -192,6 +192,19 @@
                 "boolean"
             ],
             "sort": 9
+        },
+        {
+            "name": "Patchline",
+            "description": "What release channel you want to use",
+            "env_variable": "PATCHLINE",
+            "default_value": "release",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": [
+                "string",
+                "required"
+            ],
+            "sort": 13
         }
     ]
 }

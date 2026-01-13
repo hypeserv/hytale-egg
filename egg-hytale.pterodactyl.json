@@ -4,7 +4,7 @@
         "version": "PTDL_v2",
         "update_url": "https:\/\/raw.githubusercontent.com\/NATroutter\/egg-hytale\/refs\/heads\/main\/egg-hytale.pterodactyl.json"
     },
-    "exported_at": "2026-01-13T17:05:15+02:00",
+    "exported_at": "2026-01-13T17:10:05+02:00",
     "name": "Hytale",
     "author": "contact@natroutter.fi",
     "description": "Hytale is a block-based sandbox game that blends creative building with RPG adventure. Explore procedurally generated worlds filled with unique biomes, dungeons, and creatures. Build anything from simple homes to grand castles, craft items, and battle monsters. Create custom content with built-in modding tools, host your own servers, and shape the experience with plugins and mods. Play solo or with friends in a world designed for both creation and exploration.\r\n\r\nCredits:\r\n- Made by NATroutter\r\n- https:\/\/natroutter.fi\r\n- https:\/\/github.com\/NATroutter",
@@ -148,6 +148,16 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Patchline",
+            "description": "What release channel you want to use",
+            "env_variable": "PATCHLINE",
+            "default_value": "release",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
             "field_type": "text"
         }
     ]
