@@ -49,6 +49,7 @@ The following variables can be configured:
 
 | Variable | Description | Default |
 | ---------- | ------------- | --------- |
+| `GAME_PROFILE` | Hytale profile username for server authentication. Visit [accounts.hytale.com](https://accounts.hytale.com/) → Game Profiles to find your username. Leave empty to use first profile. | (empty) |
 | `ASSET_PACK` | Assets pack (.zip) that are being send to player | `Assets.zip` |
 | `ACCEPT_EARLY_PLUGINS` | Acknowledge that loading early plugins is unsupported and may cause stability issues | `false` |
 | `ALLOW_OP` | Do you wish to allow operators or not | `true` |
