@@ -4,7 +4,7 @@
         "version": "PTDL_v2",
         "update_url": "https:\/\/raw.githubusercontent.com\/NATroutter\/egg-hytale\/refs\/heads\/main\/egg-hytale.pterodactyl.json"
     },
-    "exported_at": "2026-01-14T11:33:06+02:00",
+    "exported_at": "2026-01-14T16:59:30+02:00",
     "name": "Hytale",
     "author": "contact@natroutter.fi",
     "description": "Hytale is a block-based sandbox game that blends creative building with RPG adventure. Explore procedurally generated worlds filled with unique biomes, dungeons, and creatures. Build anything from simple homes to grand castles, craft items, and battle monsters. Create custom content with built-in modding tools, host your own servers, and shape the experience with plugins and mods. Play solo or with friends in a world designed for both creation and exploration.\r\n\r\nCredits:\r\n- Made by NATroutter\r\n- https:\/\/natroutter.fi\r\n- https:\/\/github.com\/NATroutter",
@@ -41,8 +41,8 @@
             "field_type": "text"
         },
         {
-            "name": "Allow Operators",
-            "description": "Do you wish to allow operators or not",
+            "name": "Allow Self Operator",
+            "description": "Allows players to give themselves operator (admin) permissions using the \/op command. Use with caution, as this grants full control over the server.",
             "env_variable": "ALLOW_OP",
             "default_value": "0",
             "user_viewable": true,
@@ -52,22 +52,22 @@
         },
         {
             "name": "Asset Pack",
-            "description": "Assets pack (.zip) that are being send to player",
+            "description": "The asset pack used by the server, containing all game items, textures, models, and other visual resources.",
             "env_variable": "ASSET_PACK",
             "default_value": "Assets.zip",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "nullable|string|regex:\/^([\\w\\d._-]+)(\\.zip)$\/",
+            "rules": "required|string|regex:\/^\\s*([\\w._-]+)\\.zip\\s*$\/",
             "field_type": "text"
         },
         {
             "name": "Auth Mode",
             "description": "Authentication mode",
             "env_variable": "AUTH_MODE",
-            "default_value": "authenticated",
+            "default_value": "AUTHENTICATED",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|in:authenticated,offline",
+            "rules": "required|string|in:AUTHENTICATED,OFFLINE,INSECURE",
             "field_type": "text"
         },
         {
@@ -168,6 +168,76 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "required|integer|min:1",
+            "field_type": "text"
+        },
+        {
+            "name": "Boot commands",
+            "description": "Comma-separated commands to run on server start (executed synchronously in order)",
+            "env_variable": "BOOT_COMMANDS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Force network flush",
+            "description": "Forces the server to immediately send all pending network data to clients, bypassing normal buffering. This can reduce delays for critical updates but may slightly increase network usage.",
+            "env_variable": "FORCE_NETWORK_FLUSH",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "Event Debug",
+            "description": "Enables detailed logging of server events for debugging purposes. Useful for troubleshooting issues or tracking event behavior, but may produce a lot of output.",
+            "env_variable": "EVENT_DEBUG",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "Logger Level",
+            "description": "Sets the logging level for specific components. Use a comma-separated list in the format LoggerName:LEVEL (for example, com.example:INFO) to control how much detail is logged.",
+            "env_variable": "LOGGER_LEVEL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Validate world generation",
+            "description": "Causes the server to exit with an error code if default world gen is invalid. Leave empty to skip validation.",
+            "env_variable": "VALIDATE_WORLD_GENERATION",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "Validate prefabs",
+            "description": "Forces the server to stop and exit with an error if any specified prefab types are invalid. Provide a comma-separated list of prefab categories (e.g. PHYSICS,BLOCKS,BLOCK_STATES,ENTITIES,BLOCK_FILLER) to check. Leave empty to skip validation.",
+            "env_variable": "VALIDATE_PREFABS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Validate Assets",
+            "description": "Causes the server to exit with an error code if assets are invalid. Leave empty to skip validation.",
+            "env_variable": "VALIDATE_ASSETS",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
             "field_type": "text"
         }
     ]
