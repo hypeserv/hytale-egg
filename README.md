@@ -76,10 +76,17 @@ The following options can be configured:
 | `Backup Frequency` | Backup interval in minutes | `30` |
 | `Patchline` | What release channel you want to use | `release` |
 | `Memory overhead` | The amount of RAM (in MB) kept aside for the system so the server doesn’t use everything. Java will get the rest. | `0` |
+| `Logger Level` | Sets the logging level for specific components. Use a comma-separated list in the format LoggerName:LEVEL (for example, com.example:INFO) to control how much detail is logged. | `empty` |
+| `Validate Assets` | Causes the server to exit with an error code if assets are invalid. Leave empty to skip validation. | `0` |
+| `Validate prefabs` | Forces the server to stop and exit with an error if any specified prefab types are invalid. Provide a comma-separated list of prefab categories (e.g. PHYSICS,BLOCKS,BLOCK_STATES,ENTITIES,BLOCK_FILLER) to check. Leave empty to skip validation. | `0` |
+| `Validate world generation` | Causes the server to exit with an error code if world gen is invalid. Leave empty to skip validation. | `0` |
 
 ### First-Time Authentication
 
 During the first start, the Hytale downloader will require authentication with your Hytale account. You'll see output similar to this in the console:
+
+> [!CAUTION]
+> **You must have purchased Hytale on the account you are using to authenticate.**
 
 ```txt
 Please visit the following URL to authenticate:

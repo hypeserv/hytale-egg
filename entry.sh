@@ -335,7 +335,7 @@ if [ ! -f ".hytale-downloader-credentials.json" ]; then
 
     echo " "
     echo "════════════════════════════════════════════════════════════════"
-    echo "  NOTE: You must own Hytale with the account you authenticate"
+    echo "  NOTE: You must have purchased Hytale on the account you are using to authenticate."
     echo "════════════════════════════════════════════════════════════════"
     echo " "
 
