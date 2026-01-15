@@ -16,8 +16,10 @@
 
 DOWNLOAD_URL="https://downloader.hytale.com/hytale-downloader.zip"
 DOWNLOAD_FILE="hytale-downloader.zip"
-VERSION_FILE="version.txt"
+DOWNLOAD_CRED_FILE=".hytale-downloader-credentials.json"
 AUTH_CACHE_FILE=".hytale-auth-tokens.json"
+VERSION_FILE="version.txt"
+MODS_FOLDER="mods"
 
 # Detect architecture and set appropriate downloader binary
 ARCH=$(uname -m)
@@ -58,8 +60,8 @@ extract_server_files() {
         # Move contents from Server folder to current directory
         if [ -d "Server" ]; then
             echo "Moving server files from Server directory..."
-            mv Server/* .
-            rmdir Server
+            mv -f Server/* .
+            rm -rf ./Server
             echo "✓ Server files moved to root directory."
         fi
 
@@ -316,15 +318,15 @@ perform_authentication() {
     echo ""
 }
 
-# Copy start.sh template to /home/container if it doesn't exist
+# Copy start.sh template to /home/container
 echo "Copying start.sh template to /home/container..."
-cp /usr/local/bin/start.sh /home/container/start.sh
-chmod 755 /home/container/start.sh
+cp -f /usr/local/bin/start.sh start.sh
+chmod 755 start.sh
 
 # Check if the backup directory exists
-if [ ! -d "/home/container/backup" ]; then
+if [ ! -d "backup" ]; then
     echo "Backup directory does not exist. Creating it..."
-    mkdir -p /home/container/backup
+    mkdir -p backup
 
     if [ $? -ne 0 ]; then
         echo "Failed to create backup directory: /backup"
@@ -333,7 +335,7 @@ if [ ! -d "/home/container/backup" ]; then
 else
     echo "Backup directory already exists."
 fi
-chmod -R 755 /home/container/backup
+chmod -R 755 backup
 
 # Check if the downloader exists
 if [ ! -f "$DOWNLOADER" ]; then
@@ -354,10 +356,24 @@ if [ ! -f "$VERSION_FILE" ]; then
     touch $VERSION_FILE
 fi
 
+#Fix system permissions
+if [ -f "$VERSION_FILE" ] && { [ ! -r "$VERSION_FILE" ] || [ ! -w "$VERSION_FILE" ]; }; then
+    echo "Fixing permissions on $VERSION_FILE..."
+    chmod 644 "$VERSION_FILE"
+fi
+if [ -f "$DOWNLOAD_CRED_FILE" ] && { [ ! -r "$DOWNLOAD_CRED_FILE" ] || [ ! -w "$DOWNLOAD_CRED_FILE" ]; }; then
+    echo "Fixing permissions on $DOWNLOAD_CRED_FILE..."
+    chmod 644 "$DOWNLOAD_CRED_FILE"
+fi
+if [ -f "$AUTH_CACHE_FILE" ] && { [ ! -r "$AUTH_CACHE_FILE" ] || [ ! -w "$AUTH_CACHE_FILE" ]; }; then
+    echo "Fixing permissions on $AUTH_CACHE_FILE..."
+    chmod 644 "$AUTH_CACHE_FILE"
+fi
+
 INITIAL_SETUP=0
 
 # Check if credentials file exists, if not run the updater
-if [ ! -f ".hytale-downloader-credentials.json" ]; then
+if [ ! -f "$DOWNLOAD_CRED_FILE" ]; then
     INITIAL_SETUP=1
     echo "Credentials file not found, running initial setup..."
     echo "Downloading server files..."
@@ -380,11 +396,9 @@ if [ ! -f ".hytale-downloader-credentials.json" ]; then
         echo ""
 
         echo "Removing invalid credential file..."
-        rm -f .hytale-downloader-credentials.json
+        rm -f $DOWNLOAD_CRED_FILE
         exit 1
     fi
-
-    extract_server_files
 
     # Save version info after initial setup
     DOWNLOADER_VERSION=$($DOWNLOADER -print-version 2>&1)
@@ -393,6 +407,8 @@ if [ ! -f ".hytale-downloader-credentials.json" ]; then
         echo "$DOWNLOADER_VERSION" > $VERSION_FILE
         echo "✓ Saved version info!"
     fi
+
+    extract_server_files
 fi
 
 # Run automatic update if enabled
@@ -416,7 +432,9 @@ if [ "$AUTOMATIC_UPDATE" = "1" ] && [ "$INITIAL_SETUP" = "0" ]; then
         echo "Output: $DOWNLOADER_VERSION"
         exit 1
     else
-        echo "Local version: $LOCAL_VERSION"
+        if [ -n "$LOCAL_VERSION" ]; then
+            echo "Local version: $LOCAL_VERSION"
+        fi
         echo "Downloader version: $DOWNLOADER_VERSION"
 
         # Compare versions
@@ -425,11 +443,12 @@ if [ "$AUTOMATIC_UPDATE" = "1" ] && [ "$INITIAL_SETUP" = "0" ]; then
 
             $DOWNLOADER -check-update
             $DOWNLOADER -patchline $PATCHLINE -download-path server.zip
-            extract_server_files
 
             # Update version file after successful update
             echo "$DOWNLOADER_VERSION" > $VERSION_FILE
             echo "✓ Saved version info!"
+
+            extract_server_files
         else
             echo "⨯ Versions match, skipping update"
         fi
@@ -448,9 +467,14 @@ if [ "$ENABLE_SOURCE_QUERY_SUPPORT" = "1" ]; then
     echo "Source Query support enabled, checking for plugin..."
 
     # Create mods directory if it doesn't exist
-    if [ ! -d "mods" ]; then
+    if [ ! -d "$MODS_FOLDER" ]; then
         echo "Creating mods directory..."
-        mkdir -p mods
+        mkdir -p $MODS_FOLDER
+    fi
+
+    if [ -d "$MODS_FOLDER" ] && { [ ! -r "$MODS_FOLDER" ] || [ ! -w "$MODS_FOLDER" ] || [ ! -x "$MODS_FOLDER" ]; }; then
+        echo "Fixing permissions on directory $MODS_FOLDER..."
+        chmod 755 "$MODS_FOLDER"
     fi
 
     echo "Downloading latest hytale-sourcequery plugin..."
@@ -500,6 +524,21 @@ fi
 # Export the session tokens so they're available to start.sh
 export SESSION_TOKEN
 export IDENTITY_TOKEN
+
+# Enforce file and folder permissions if enabled
+if [ "$ENFORCE_PERMISSIONS" = "1" ]; then
+    echo "Enforcing permissions..."
+    # Set all directories to 755
+    find . -type d -exec chmod 755 {} \;
+    # Set all files to 644, excluding executables that need to remain executable
+    find . -type f \
+        ! -name "hytale-downloader-linux-amd64" \
+        ! -name "hytale-downloader-linux-arm64" \
+        ! -name "qemu-x86_64-static" \
+        ! -name "start.sh" \
+        -exec chmod 644 {} \;
+    echo "✓ Permissions enforced (files: 644, folders: 755)"
+fi
 
 # Now call the pterodactyl entrypoint which will execute start.sh
 exec /bin/bash /entrypoint.sh
