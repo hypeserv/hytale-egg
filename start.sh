@@ -18,17 +18,16 @@ if [ "${LEVERAGE_AHEAD_OF_TIME_CACHE}" = "1" ]; then
     JAVA_CMD="${JAVA_CMD} -XX:AOTCache=HytaleServer.aot"
 fi
 
-# Add max memory (always set)
+# Add max memory (only if SERVER_MEMORY is set and non-zero)
 MEMORY_OVERHEAD=${MEMORY_OVERHEAD:-0}
-if [ -z "${SERVER_MEMORY}" ] || [ "${SERVER_MEMORY}" = "0" ]; then
-    JAVA_MEMORY=1024
-elif [ "${SERVER_MEMORY}" -gt "${MEMORY_OVERHEAD}" ] 2>/dev/null; then
-    JAVA_MEMORY=$((SERVER_MEMORY - MEMORY_OVERHEAD))
-else
-    JAVA_MEMORY=${SERVER_MEMORY}
+if [ -n "${SERVER_MEMORY}" ] && [ "${SERVER_MEMORY}" != "0" ]; then
+    if [ "${SERVER_MEMORY}" -gt "${MEMORY_OVERHEAD}" ] 2>/dev/null; then
+        JAVA_MEMORY=$((SERVER_MEMORY - MEMORY_OVERHEAD))
+    else
+        JAVA_MEMORY=${SERVER_MEMORY}
+    fi
+    JAVA_CMD="${JAVA_CMD} -Xmx${JAVA_MEMORY}M"
 fi
-
-JAVA_CMD="${JAVA_CMD} -Xmx${JAVA_MEMORY}M"
 
 # Add JVM arguments if set
 if [ -n "${JVM_ARGS}" ]; then
@@ -109,5 +108,5 @@ fi
 JAVA_CMD="${JAVA_CMD} --bind 0.0.0.0:${SERVER_PORT}"
 
 # Execute the command
-# echo $JAVA_CMD
+echo $JAVA_CMD
 eval $JAVA_CMD
