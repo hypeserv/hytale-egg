@@ -8,7 +8,8 @@
     "author": "help@hypeserv.com",
     "description": "Hytale is a block-based sandbox game that blends creative building with RPG adventure. Explore procedurally generated worlds filled with unique biomes, dungeons, and creatures. Build anything from simple homes to grand castles, craft items, and battle monsters. Create custom content with built-in modding tools, host your own servers, and shape the experience with plugins and mods. Play solo or with friends in a world designed for both creation and exploration.\r\n\r\nCredits:\r\n- Made by NATroutter\r\n- https:\/\/natroutter.fi\r\n- https:\/\/github.com\/NATroutter",
     "features": [
-        "java_version"
+        "java_version",
+        "hytale_auth"
     ],
     "docker_images": {
         "Hytale": "ghcr.io\/hypeserv\/hytale-egg:latest"
