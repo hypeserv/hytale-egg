@@ -2,8 +2,8 @@
 FROM --platform=$TARGETOS/$TARGETARCH eclipse-temurin:25-jdk-noble
 
 # Metadata
-LABEL author="NATroutter" maintainer="contact@natroutter.fi"
-LABEL org.opencontainers.image.source="https://github.com/NATroutter/egg-hytale"
+LABEL author="hypeserv" maintainer="info@hypeserv.com"
+LABEL org.opencontainers.image.source="https://github.com/hypeserv/hytale-egg"
 LABEL org.opencontainers.image.description="Container for running hytale game servers"
 LABEL org.opencontainers.image.licenses=MIT
 

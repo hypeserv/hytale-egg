@@ -6,7 +6,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: natroutter/egg-hytale
+  IMAGE_NAME: hypeserv/hytale-egg
 
 jobs:
   publish:

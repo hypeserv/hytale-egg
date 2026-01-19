@@ -21,12 +21,9 @@ fi
 # Add max memory (only if SERVER_MEMORY is set and non-zero)
 MEMORY_OVERHEAD=${MEMORY_OVERHEAD:-0}
 if [ -n "${SERVER_MEMORY}" ] && [ "${SERVER_MEMORY}" != "0" ]; then
-    if [ "${SERVER_MEMORY}" -gt "${MEMORY_OVERHEAD}" ] 2>/dev/null; then
-        JAVA_MEMORY=$((SERVER_MEMORY - MEMORY_OVERHEAD))
-    else
-        JAVA_MEMORY=${SERVER_MEMORY}
-    fi
-    JAVA_CMD="${JAVA_CMD} -Xmx${JAVA_MEMORY}M"
+    ALLOCATED_MEMORY_MAX=$(awk "BEGIN { printf \"%d\", $SERVER_MEMORY * ($MEMORY_OVERHEAD / 100.0) }")
+    echo "Allocated Memory JVM MAX: ${ALLOCATED_MEMORY_MAX}"
+    JAVA_CMD="${JAVA_CMD} -Xmx${ALLOCATED_MEMORY_MAX}M"
 fi
 
 # Add JVM arguments if set
