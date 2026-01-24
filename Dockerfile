@@ -49,6 +49,12 @@ RUN mkdir -p /egg-hytale
 COPY --chmod=755 ./lib /egg-hytale/lib
 RUN sed -i 's/\r$//' /egg-hytale/lib/*.sh
 
+# Create dmidecode shim for Docker usage
+COPY --chmod=755 ./lib/dmidecode /usr/local/bin/dmidecode
+RUN sed -i 's/\r$//' /usr/local/bin/dmidecode
+
+RUN sed -i 's/\r$//' /entrypoint.sh
+
 # Create the container user
 RUN useradd -m -d /home/container -s /bin/bash container
 

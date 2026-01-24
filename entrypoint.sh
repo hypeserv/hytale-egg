@@ -6,6 +6,7 @@ source "/egg-hytale/lib/downloader.sh"
 source "/egg-hytale/lib/plugins.sh"
 
 DOWNLOAD_URL="https://downloader.hytale.com/hytale-downloader.zip"
+PATCHLINE_CACHE_FILE=".patchline-cache.txt"
 DOWNLOAD_FILE="hytale-downloader.zip"
 DOWNLOADER_DIR="/egg-hytale/downloader"
 DOWNLOAD_CRED_FILE=".hytale-downloader-credentials.json"
@@ -28,25 +29,9 @@ chmod 755 start.sh
 setup_backup_directory
 ensure_downloader
 
-# Create version file
-if [ ! -f "$VERSION_FILE" ]; then
-    logger info "Creating version check file..."
-    touch $VERSION_FILE
-fi
+create_system_files
 
-#Fix system permissions
-if [ -f "$VERSION_FILE" ] && { [ ! -r "$VERSION_FILE" ] || [ ! -w "$VERSION_FILE" ]; }; then
-    logger warn "Fixing permissions on $VERSION_FILE..."
-    chmod 644 "$VERSION_FILE"
-fi
-if [ -f "$DOWNLOAD_CRED_FILE" ] && { [ ! -r "$DOWNLOAD_CRED_FILE" ] || [ ! -w "$DOWNLOAD_CRED_FILE" ]; }; then
-    logger warn "Fixing permissions on $DOWNLOAD_CRED_FILE..."
-    chmod 644 "$DOWNLOAD_CRED_FILE"
-fi
-if [ -f "$AUTH_CACHE_FILE" ] && { [ ! -r "$AUTH_CACHE_FILE" ] || [ ! -w "$AUTH_CACHE_FILE" ]; }; then
-    logger warn "Fixing permissions on $AUTH_CACHE_FILE..."
-    chmod 644 "$AUTH_CACHE_FILE"
-fi
+ensure_system_file_permissions
 
 run_update_process
 validate_server_files
@@ -59,7 +44,7 @@ if [ -n "$OVERRIDE_SESSION_TOKEN" ] && [ -n "$OVERRIDE_IDENTITY_TOKEN" ]; then
     SESSION_TOKEN="$OVERRIDE_SESSION_TOKEN"
     IDENTITY_TOKEN="$OVERRIDE_IDENTITY_TOKEN"
 else
-    # Default to persistent authentication if not specified
+    # Default to persistent authentication if not specified, this is needed for backwards combability
     if [ -z "$USE_PERSISTENT_AUTHENTICATION" ]; then
         USE_PERSISTENT_AUTHENTICATION="ENABLED"
     fi

@@ -88,16 +88,12 @@ if [ "${ENABLE_BACKUPS}" = "1" ]; then
     JAVA_CMD="${JAVA_CMD} --backup --backup-dir ./backup --backup-frequency ${BACKUP_FREQUENCY} --backup-max-count ${MAXIMUM_BACKUPS}"
 fi
 
-# Add session tokens and owner UUID
+# Add session tokens
 if [ -n "${SESSION_TOKEN}" ]; then
     JAVA_CMD="${JAVA_CMD} --session-token ${SESSION_TOKEN}"
-else
-    echo "Warning: SESSION_TOKEN is not set"
 fi
 if [ -n "${IDENTITY_TOKEN}" ]; then
     JAVA_CMD="${JAVA_CMD} --identity-token ${IDENTITY_TOKEN}"
-else
-    echo "Warning: IDENTITY_TOKEN is not set"
 fi
 
 # Add bind address
