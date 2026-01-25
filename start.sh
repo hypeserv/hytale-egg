@@ -31,7 +31,7 @@ if [ -n "${JVM_ARGS}" ]; then
     JAVA_CMD="${JAVA_CMD} ${JVM_ARGS}"
 fi
 
-JAVA_CMD="${JAVA_CMD} -jar HytaleServer.jar"
+JAVA_CMD="${JAVA_CMD} -Djdk.nio.maxCachedBufferSize=0 -jar HytaleServer.jar"
 
 # Add assets parameter if set and ends with .zip
 if [ -n "${ASSET_PACK}" ]; then
